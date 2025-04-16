@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, Mail, Clock } from 'lucide-react';
 import { Category, Priority, Task } from '@/types/task';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,7 +27,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from '@/components/ui/dialog';
+import { Switch } from '@/components/ui/switch';
 
 interface TaskFormProps {
   task?: Task;
@@ -49,6 +51,11 @@ const TaskForm: React.FC<TaskFormProps> = ({
   const [categoryId, setCategoryId] = useState(task?.categoryId || categories[0]?.id || '');
   const [priority, setPriority] = useState<Priority>(task?.priority || 'medium');
   const [dueDate, setDueDate] = useState<Date | undefined>(task?.dueDate || undefined);
+  
+  // Add states for reminders
+  const [reminder, setReminder] = useState(task?.reminder || false);
+  const [reminderEmail, setReminderEmail] = useState(task?.reminderEmail || '');
+  const [reminderTime, setReminderTime] = useState<Date | undefined>(task?.reminderTime || undefined);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,6 +69,9 @@ const TaskForm: React.FC<TaskFormProps> = ({
       categoryId,
       priority,
       dueDate: dueDate || null,
+      reminder,
+      reminderEmail: reminder ? reminderEmail : null,
+      reminderTime: reminder ? reminderTime || null : null,
     });
     
     onClose();
@@ -74,6 +84,9 @@ const TaskForm: React.FC<TaskFormProps> = ({
           <DialogTitle>
             {task ? 'Edit Task' : 'Create New Task'}
           </DialogTitle>
+          <DialogDescription>
+            Fill in the details for your task. Add a reminder if you want to be notified by email.
+          </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4 pt-2">
@@ -187,6 +200,66 @@ const TaskForm: React.FC<TaskFormProps> = ({
                 />
               </PopoverContent>
             </Popover>
+          </div>
+          
+          {/* Email Reminder Section */}
+          <div className="border-t pt-4 mt-4">
+            <div className="flex items-center justify-between mb-2">
+              <Label htmlFor="reminder" className="text-base font-medium">Email Reminder</Label>
+              <Switch 
+                id="reminder" 
+                checked={reminder} 
+                onCheckedChange={setReminder} 
+              />
+            </div>
+            
+            {reminder && (
+              <div className="space-y-4 mt-4">
+                <div className="space-y-2">
+                  <Label htmlFor="reminderEmail">Email Address</Label>
+                  <div className="flex items-center border rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+                    <Mail className="h-4 w-4 mx-3 text-gray-400" />
+                    <Input
+                      id="reminderEmail"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={reminderEmail}
+                      onChange={(e) => setReminderEmail(e.target.value)}
+                      className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                      required={reminder}
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="reminderTime">Reminder Time</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        id="reminderTime"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !reminderTime && "text-muted-foreground"
+                        )}
+                      >
+                        <Clock className="mr-2 h-4 w-4" />
+                        {reminderTime ? format(reminderTime, "PPP p") : <span>Set reminder time</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={reminderTime}
+                        onSelect={(date) => setReminderTime(date)}
+                        initialFocus
+                        className={cn("p-3 pointer-events-auto")}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+            )}
           </div>
           
           <DialogFooter>

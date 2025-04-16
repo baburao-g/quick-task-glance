@@ -49,10 +49,26 @@ const Index = () => {
       setTasks(prevTasks =>
         prevTasks.map(task =>
           task.id === taskData.id
-            ? { ...task, ...taskData, category: task.category }
+            ? { 
+                ...task, 
+                ...taskData, 
+                category: task.category,
+                reminder: taskData.reminder || false,
+                reminderEmail: taskData.reminderEmail || null,
+                reminderTime: taskData.reminderTime || null
+              }
             : task
         )
       );
+      
+      // Show reminder toast if enabled
+      if (taskData.reminder && taskData.reminderEmail) {
+        toast({
+          title: "Reminder set",
+          description: `Email reminder has been set for this task.`,
+          duration: 3000,
+        });
+      }
       
       toast({
         title: "Task updated",
@@ -70,6 +86,9 @@ const Index = () => {
         priority: taskData.priority || "medium",
         categoryId: taskData.categoryId || sampleCategories[0].id,
         createdAt: new Date(),
+        reminder: taskData.reminder || false,
+        reminderEmail: taskData.reminderEmail || null,
+        reminderTime: taskData.reminderTime || null
       };
       
       const category = sampleCategories.find(c => c.id === newTask.categoryId);
@@ -79,6 +98,15 @@ const Index = () => {
       };
       
       setTasks(prevTasks => [...prevTasks, newTaskWithCategory]);
+      
+      // Show reminder toast if enabled
+      if (newTask.reminder && newTask.reminderEmail) {
+        toast({
+          title: "Reminder set",
+          description: `Email reminder has been set for "${newTask.title}".`,
+          duration: 3000,
+        });
+      }
       
       toast({
         title: "Task created",

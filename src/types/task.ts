@@ -16,6 +16,9 @@ export type Task = {
   priority: Priority;
   categoryId: string;
   createdAt: Date;
+  reminder: boolean;
+  reminderEmail: string | null;
+  reminderTime: Date | null;
 };
 
 export type TaskWithCategory = Task & {
