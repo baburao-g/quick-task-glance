@@ -5,6 +5,7 @@ import TaskItem from './TaskItem';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 interface TaskListProps {
   tasks: TaskWithCategory[];
@@ -30,6 +31,19 @@ const TaskList: React.FC<TaskListProps> = ({
     return true;
   });
 
+  // Calculate count of tasks per category
+  const getCategoryTaskCount = (categoryId: string) => {
+    return tasks.filter(task => 
+      task.categoryId === categoryId && 
+      (showCompleted || !task.completed)
+    ).length;
+  };
+
+  // Get count of all tasks (for All button)
+  const getAllTasksCount = () => {
+    return tasks.filter(task => showCompleted || !task.completed).length;
+  };
+
   return (
     <div className="bg-gray-50 rounded-lg p-4 md:p-6">
       <div className="flex flex-wrap items-center justify-between mb-6">
@@ -43,16 +57,19 @@ const TaskList: React.FC<TaskListProps> = ({
       <div className="flex flex-wrap items-center space-x-2 mb-4">
         <Button
           variant={selectedCategory === null ? "default" : "outline"}
-          className="mb-2"
+          className="mb-2 relative"
           onClick={() => setSelectedCategory(null)}
         >
           All
+          <Badge className="ml-2 bg-gray-200 text-gray-800 hover:bg-gray-200">
+            {getAllTasksCount()}
+          </Badge>
         </Button>
         {categories.map((category) => (
           <Button
             key={category.id}
             variant={selectedCategory === category.id ? "default" : "outline"}
-            className="mb-2"
+            className="mb-2 relative"
             style={{ 
               backgroundColor: selectedCategory === category.id ? category.color : undefined,
               borderColor: selectedCategory !== category.id ? category.color : undefined,
@@ -61,6 +78,15 @@ const TaskList: React.FC<TaskListProps> = ({
             onClick={() => setSelectedCategory(category.id)}
           >
             {category.name}
+            <Badge 
+              className="ml-2 text-xs" 
+              style={{
+                backgroundColor: selectedCategory === category.id ? 'rgba(255, 255, 255, 0.2)' : category.color,
+                color: selectedCategory === category.id ? 'white' : 'white'
+              }}
+            >
+              {getCategoryTaskCount(category.id)}
+            </Badge>
           </Button>
         ))}
         <div className="flex-grow"></div>
