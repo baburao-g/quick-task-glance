@@ -18,6 +18,9 @@ export const sampleTasks: Task[] = [
     priority: "high",
     categoryId: "work",
     createdAt: new Date(2025, 3, 15),
+    reminder: false,
+    reminderEmail: null,
+    reminderTime: null
   },
   {
     id: "2",
@@ -28,6 +31,9 @@ export const sampleTasks: Task[] = [
     priority: "medium",
     categoryId: "shopping",
     createdAt: new Date(2025, 3, 16),
+    reminder: false,
+    reminderEmail: null,
+    reminderTime: null
   },
   {
     id: "3", 
@@ -38,6 +44,9 @@ export const sampleTasks: Task[] = [
     priority: "low",
     categoryId: "health",
     createdAt: new Date(2025, 3, 14),
+    reminder: false,
+    reminderEmail: null,
+    reminderTime: null
   },
   {
     id: "4",
@@ -48,6 +57,9 @@ export const sampleTasks: Task[] = [
     priority: "high",
     categoryId: "work",
     createdAt: new Date(2025, 3, 15),
+    reminder: false,
+    reminderEmail: null,
+    reminderTime: null
   },
   {
     id: "5",
@@ -58,6 +70,9 @@ export const sampleTasks: Task[] = [
     priority: "medium",
     categoryId: "personal",
     createdAt: new Date(2025, 3, 17),
+    reminder: false,
+    reminderEmail: null,
+    reminderTime: null
   },
   {
     id: "6",
@@ -68,6 +83,9 @@ export const sampleTasks: Task[] = [
     priority: "low",
     categoryId: "health",
     createdAt: new Date(2025, 3, 16),
+    reminder: false,
+    reminderEmail: null,
+    reminderTime: null
   },
   {
     id: "7",
@@ -78,6 +96,9 @@ export const sampleTasks: Task[] = [
     priority: "medium",
     categoryId: "work",
     createdAt: new Date(2025, 3, 15),
+    reminder: false,
+    reminderEmail: null,
+    reminderTime: null
   },
   {
     id: "8",
@@ -88,6 +109,9 @@ export const sampleTasks: Task[] = [
     priority: "low",
     categoryId: "shopping",
     createdAt: new Date(2025, 3, 18),
+    reminder: false,
+    reminderEmail: null,
+    reminderTime: null
   },
 ];
 
