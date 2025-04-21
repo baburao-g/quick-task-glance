@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CalendarDays, ListTodo } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import Header from '@/components/Header';
 
 const Index = () => {
   const [tasks, setTasks] = useState<TaskWithCategory[]>(getTasksWithCategories());
@@ -49,9 +50,9 @@ const Index = () => {
       setTasks(prevTasks =>
         prevTasks.map(task =>
           task.id === taskData.id
-            ? { 
-                ...task, 
-                ...taskData, 
+            ? {
+                ...task,
+                ...taskData,
                 category: task.category,
                 reminder: taskData.reminder || false,
                 reminderEmail: taskData.reminderEmail || null,
@@ -60,7 +61,7 @@ const Index = () => {
             : task
         )
       );
-      
+
       // Show reminder toast if enabled
       if (taskData.reminder && taskData.reminderEmail) {
         toast({
@@ -69,7 +70,7 @@ const Index = () => {
           duration: 3000,
         });
       }
-      
+
       toast({
         title: "Task updated",
         description: "Your task has been successfully updated.",
@@ -90,15 +91,15 @@ const Index = () => {
         reminderEmail: taskData.reminderEmail || null,
         reminderTime: taskData.reminderTime || null
       };
-      
+
       const category = sampleCategories.find(c => c.id === newTask.categoryId);
       const newTaskWithCategory: TaskWithCategory = {
         ...newTask,
         category: category!,
       };
-      
+
       setTasks(prevTasks => [...prevTasks, newTaskWithCategory]);
-      
+
       // Show reminder toast if enabled
       if (newTask.reminder && newTask.reminderEmail) {
         toast({
@@ -107,7 +108,7 @@ const Index = () => {
           duration: 3000,
         });
       }
-      
+
       toast({
         title: "Task created",
         description: "Your new task has been successfully created.",
@@ -118,12 +119,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto py-6 px-4">
-          <h1 className="text-3xl font-bold text-gray-900">Task Manager</h1>
-        </div>
-      </header>
-      
+      <Header />
       <main className="container mx-auto py-6 px-4">
         <Tabs defaultValue="list">
           <div className="flex justify-between items-center mb-6">
@@ -137,17 +133,17 @@ const Index = () => {
                 Calendar View
               </TabsTrigger>
             </TabsList>
-            
-            <Button 
+
+            <Button
               onClick={handleAddTask}
               className="bg-primary hover:bg-primary/90"
             >
               Add Task
             </Button>
           </div>
-          
+
           <TabsContent value="list" className="mt-6">
-            <TaskList 
+            <TaskList
               tasks={tasks}
               categories={sampleCategories}
               onAddTask={handleAddTask}
@@ -155,16 +151,16 @@ const Index = () => {
               onTaskClick={handleTaskClick}
             />
           </TabsContent>
-          
+
           <TabsContent value="calendar" className="mt-6">
-            <CalendarView 
+            <CalendarView
               tasks={tasks}
               onTaskClick={handleTaskClick}
             />
           </TabsContent>
         </Tabs>
       </main>
-      
+
       <TaskForm
         task={currentTask}
         categories={sampleCategories}
