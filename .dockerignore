@@ -1,7 +1,8 @@
 
 node_modules
-npm-debug.log
-Dockerfile
+**/node_modules
+**/npm-debug.log
+Dockerfile*
 .dockerignore
 .git
 .github
@@ -9,3 +10,4 @@ Dockerfile
 README.md
 docker-compose.yml
 Jenkinsfile
+**/dist

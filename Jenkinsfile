@@ -8,39 +8,61 @@ pipeline {
     }
     
     environment {
-        DOCKER_IMAGE = 'quick-task-glance'
-        DOCKER_TAG = "${env.BUILD_NUMBER}"
+        FRONTEND_IMAGE = 'quick-task-glance-frontend'
+        BACKEND_IMAGE = 'quick-task-glance-backend'
+        TAG = "${env.BUILD_NUMBER}"
     }
     
     stages {
-        stage('Install') {
+        stage('Frontend Install') {
             steps {
                 sh 'npm ci'
             }
         }
         
-        stage('Lint') {
+        stage('Frontend Lint') {
             steps {
                 sh 'npm run lint || true'
             }
         }
         
-        stage('Test') {
+        stage('Frontend Test') {
             steps {
                 sh 'npm test || echo "No tests configured"'
             }
         }
         
-        stage('Build') {
+        stage('Frontend Build') {
             steps {
                 sh 'npm run build'
             }
         }
         
+        stage('Backend Install') {
+            steps {
+                dir('backend') {
+                    sh 'npm ci'
+                }
+            }
+        }
+        
+        stage('Backend Test') {
+            steps {
+                dir('backend') {
+                    sh 'npm test || echo "No tests configured"'
+                }
+            }
+        }
+        
         stage('Docker Build') {
             steps {
-                sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
-                sh 'docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest'
+                // Build frontend
+                sh 'docker build -t ${FRONTEND_IMAGE}:${TAG} -f Dockerfile.frontend .'
+                sh 'docker tag ${FRONTEND_IMAGE}:${TAG} ${FRONTEND_IMAGE}:latest'
+                
+                // Build backend
+                sh 'docker build -t ${BACKEND_IMAGE}:${TAG} -f Dockerfile.backend .'
+                sh 'docker tag ${BACKEND_IMAGE}:${TAG} ${BACKEND_IMAGE}:latest'
             }
         }
         
@@ -52,8 +74,10 @@ pipeline {
                 echo 'Deploying to production...'
                 // Add your deployment commands here
                 // For example:
-                // sh 'docker push ${DOCKER_IMAGE}:${DOCKER_TAG}'
-                // sh 'docker push ${DOCKER_IMAGE}:latest'
+                // sh 'docker push ${FRONTEND_IMAGE}:${TAG}'
+                // sh 'docker push ${FRONTEND_IMAGE}:latest'
+                // sh 'docker push ${BACKEND_IMAGE}:${TAG}'
+                // sh 'docker push ${BACKEND_IMAGE}:latest'
             }
         }
     }
